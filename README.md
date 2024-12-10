@@ -147,3 +147,24 @@ accelerate launch sample.py
 ```
 
 After that, if you want to run another sampling task on another GPU in parallel, you can just run the command `accelerate config` again to assign it to another GPU, and then modify the `checkpoint_lst` in `sample.py` to another list of checkpoints, then use the command `accelerate launch sample.py` to start the second task.
+
+
+## Step 6
+After sampling images for several model checkpoints, now you can start to evaluate them using our `ddpm_evaluate.ipynb` notebook. You need to open the file to do some customizations. First, you should locate the 3rd cell, and modify the `GENERATED_IMAGES_ROOT` to your dir where is storing the sampled images, which should be the one you have configured in the `sample_latest_checkpoint.py` and `sample.py` files. You do NOT need to modify any other dirs in this notebook.
+
+Then you may need to change the number of model checkpoints you want to evaluate, because, by default, we hard-coded it to 75 in our experiments. If you do not have sampled images for the first 75 checkpoints, please modify the following line in the 7th cell to yours:
+```python
+for checkpoint in checkpoints[:75]:
+```
+You may have the concern that in Python, if a list has a length smaller than 75, the code `checkpoints[:75]` will be okay, and just read all of the items in the list. So why need to change this? But, in this loop, we require the checkpoint being evaluated must have sample images in the sample process, otherwise, it will be meaningless. But, sometimes, you may have a model checkpoint, but never sampled images for it, so it will cause some problems. Therefore, we suggest you change this value in the code to yours.
+
+After that, you can run all the cells in the `ddpm_evaluate.ipynb` notebook for evaluation. After the evaluation, it will produce the following images and csv files in your project root:
+```
+FID_vs_TrainingSteps.png
+IS_vs_TrainingSteps.png
+FID_vs_TrainingSteps_First25.png
+IS_vs_TrainingSteps_First25.png
+evaluation_results.csv                  # storing the FID, IS Mean, IS Std for each model checkpoint evaluated
+best_scores.csv                         # storing the model checkpoint with the best FID, and the model checkpoint with the best IS Mean
+```
+
