@@ -78,7 +78,56 @@ pip install accelerate
 ```bash
 accelerate config
 ```
-Then you can run our training script on multiple GPU with the following comsmand:
+For the process of `accelerate config`, we recommend you follow our steps if you have never used it on the UVA Rivanna. If you are familiar with it, just ignore this tutorial.
+```bash
+bash-4.4$accelerate config
+----------------------------------------------------------------------------------------------------------------------------------
+In which compute environment are you running?
+Please select a choice using the arrow or number keys, and selecting with enter
+ ➔  This machine
+    AWS (Amazon SageMaker)
+```
+
+```bash
+Which type of machine are you using?                                                                                              
+Please select a choice using the arrow or number keys, and selecting with enter
+    No distributed training                                                                                                       
+    multi-CPU                                                                                                                     
+    multi-XPU                                                                                                                     
+ ➔  multi-GPU
+    multi-NPU
+    multi-MLU
+    multi-MUSA
+    TPU
+```
+
+
+```bash
+How many different machines will you use (use more than 1 for multi-node training)? [1]:                                          
+Should distributed operations be checked while running for errors? This can avoid timeout issues but will be slower. [yes/NO]:    
+Do you wish to optimize your script with torch dynamo?[yes/NO]:                                                                   
+Do you want to use DeepSpeed? [yes/NO]:                                                                                           
+Do you want to use FullyShardedDataParallel? [yes/NO]:                                                                            
+Do you want to use Megatron-LM ? [yes/NO]:                                                                                        
+How many GPU(s) should be used for distributed training? [1]:4 
+```
+
+For the last line above, you should set it to the number of GPUs you want to use. Here I used 4.
+
+
+```bash
+What GPU(s) (by id) should be used for training on this machine as a comma-seperated list? [all]:                                 
+Would you like to enable numa efficiency? (Currently only supported on NVIDIA hardware). [yes/NO]: yes
+----------------------------------------------------------------------------------------------------------------------------------Do you wish to use mixed precision?
+Please select a choice using the arrow or number keys, and selecting with enter
+    no                                                                                                                            
+ ➔  fp16
+    bf16
+    fp8
+```
+
+
+Then you can run our training script on multiple GPUs with the following command:
 ```bash
 accelerate launch train-700000.py
 ```
