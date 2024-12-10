@@ -86,7 +86,64 @@ accelerate launch train-700000.py
 ## Step 5
 After the training process, or after getting some training checkpoints even if not finished all training steps, you can start to run our sample scripts to sample images. We have two sample scripts, one is called `sample_latest_checkpoint.py`, and the other is called `sample.py`.
 
-The `sample_latest_checkpoint.py` script will automatically find the
+The `sample_latest_checkpoint.py` script will automatically find the latest trained model checkpoint and load it then sample 5,000 images from pure noise using this model checkpoint.
 
+The `sample.py` script can sample 1,000 images for each of the model checkpoints in a list of defined model checkpoints.
 
+If you want to run `sample_latest_checkpoint.py`, please first open it and modify the code in line 2 and 3 like the following:
+```python
+RESULTS_DIR = "/scratch/kyq5pg/MLIA_final/results/"
+GENERATED_IMAGES_PATH = "/scratch/kyq5pg/MLIA_final/samples/"
+```
+You should change them to your own dirs. `RESULTS_DIR` should be the dir storing your model checkpoints, which you have configured in `train-700000.py` file. The `GENERATED_IMAGES_PATH` should be the dir you want it to store the sampled images.
+Then you can use the following command to run it:
+```
+python sample_latest_checkpoint.py
+```
 
+If you want to run `sample.py`, similarly, you should open it and find the code in line 9 and 10 to modify the `RESULTS_DIR` and `GENERATED_IMAGES_PATH` to your own dirs.
+
+Additionally, for `sample.py`, you have to find the code in line 214 like the following:
+```python
+checkpoint_lst = [
+    "model-70.pt",
+    "model-71.pt",
+    "model-72.pt",
+    "model-73.pt",
+    "model-74.pt",
+    "model-75.pt",
+]
+```
+You should change it to a list of model checkpoints you want to sample images for.
+
+After that, you can run `sample.py`, which supports using HuggingFace `accelerate` to assign the task to a specific GPU. You can use the following command:
+```bash
+accelerate config
+```
+This time, you should follow the following instruction to finish the config. 
+```
+Which type of machine are you using?                                                                                              
+Please select a choice using the arrow or number keys, and selecting with enter
+ ➔  No distributed training
+    multi-CPU
+    multi-XPU
+    multi-GPU
+    multi-NPU
+    multi-MLU
+    multi-MUSA
+    TPU
+```
+```bash
+Do you want to run your training on CPU only (even if a GPU / Apple Silicon / Ascend NPU device is available)? [yes/NO]:NO 
+```
+```bash
+What GPU(s) (by id) should be used for training on this machine as a comma-seperated list? [all]:0
+```
+This is for selecting the index of your GPU to be assigned with this task.
+
+After that, you can run the following command to start the sampling task:
+```bash
+accelerate launch sample.py
+```
+
+After that, if you want to run another sampling task on another GPU in parallel, you can just run the command `accelerate config` again to assign it to another GPU, and then modify the `checkpoint_lst` in `sample.py` to another list of checkpoints, then use the command `accelerate launch sample.py` to start the second task.
