@@ -78,7 +78,7 @@ pip install accelerate
 ```bash
 accelerate config
 ```
-For the process of `accelerate config`, we recommend you follow our steps if you have never used it on the UVA Rivanna. If you are familiar with it, just ignore this tutorial.
+For the process of `accelerate config`, we recommend you follow the following steps if you have never used it on the UVA Rivanna. If you are familiar with it, just ignore this tutorial.
 ```bash
 bash-4.4$accelerate config
 ----------------------------------------------------------------------------------------------------------------------------------
@@ -207,7 +207,7 @@ for checkpoint in checkpoints[:75]:
 ```
 You may have the concern that in Python, if a list has a length smaller than 75, the code `checkpoints[:75]` will be okay, and just read all of the items in the list. So why need to change this? But, in this loop, we require the checkpoint being evaluated must have sample images in the sample process, otherwise, it will be meaningless. But, sometimes, you may have a model checkpoint, but never sampled images for it, so it will cause some problems. Therefore, we suggest you change this value in the code to yours.
 
-After that, you can run all the cells in the `ddpm_evaluate.ipynb` notebook for evaluation. After the evaluation, it will produce the following images and csv files in your project root:
+After that, you can run all the cells in the `ddpm_evaluate.ipynb` notebook for evaluation. After all the cells finished, it will produce the following images and csv files in your project root:
 ```
 FID_vs_TrainingSteps.png
 IS_vs_TrainingSteps.png
